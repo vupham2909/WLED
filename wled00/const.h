@@ -138,13 +138,14 @@
 #define BTN_TYPE_SWITCH_ACT_HIGH  5 //not implemented
 
 //Ethernet board types
-#define WLED_NUM_ETH_TYPES        5
+#define WLED_NUM_ETH_TYPES        6
 
 #define WLED_ETH_NONE             0
 #define WLED_ETH_WT32_ETH01       1
 #define WLED_ETH_ESP32_POE        2
 #define WLED_ETH_WESP32           3
 #define WLED_ETH_QUINLED          4
+#define WLED_ETH_TWILIGHTLORD     5
 
 //Hue error codes
 #define HUE_ERROR_INACTIVE        0
