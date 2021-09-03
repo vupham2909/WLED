@@ -1,216 +1,419 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-	<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
-	<meta charset="utf-8">
-	<meta name="theme-color" content="#222222">
-	<meta content="yes" name="apple-mobile-web-app-capable">
-	<link rel="shortcut icon" href="data:image/x-icon;base64,AAABAAEAEBAAAAEAGACGAAAAFgAAAIlQTkcNChoKAAAADUlIRFIAAAAQAAAAEAgGAAAAH/P/YQAAAE1JREFUOI1j/P//PwOxgNGeAUMxE9G6cQCKDWAhpADZ2f8PMjBS3QW08QK20KaZC2gfC9hCnqouoNgARgY7zMxAyNlUdQHlXiAlO2MDAD63EVqNHAe0AAAAAElFTkSuQmCC"/>
-	<title>WLED</title>
-	<script>function feedback(){}</script>
-	<link rel="stylesheet" href="index.css">
-</head>
-<body onload="onLoad()">
+  <head>
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, minimum-scale=1"
+    />
+    <meta charset="utf-8" />
+    <meta name="theme-color" content="#222222" />
+    <meta content="yes" name="apple-mobile-web-app-capable" />
+    <link
+      rel="shortcut icon"
+      href="data:image/x-icon;base64,AAABAAEAEBAAAAEAGACGAAAAFgAAAIlQTkcNChoKAAAADUlIRFIAAAAQAAAAEAgGAAAAH/P/YQAAAE1JREFUOI1j/P//PwOxgNGeAUMxE9G6cQCKDWAhpADZ2f8PMjBS3QW08QK20KaZC2gfC9hCnqouoNgARgY7zMxAyNlUdQHlXiAlO2MDAD63EVqNHAe0AAAAAElFTkSuQmCC"
+    />
+    <title>WLED</title>
+    <script>
+      function feedback() {}
+    </script>
+    <link rel="stylesheet" href="index.css" />
+  </head>
+  <body onload="onLoad()">
+    <div id="cv" class="overlay">Đang tải giao diện WLED...</div>
+    <noscript
+      ><div class="overlay" style="opacity: 1">
+        Xin lỗi, Giao diện WLED cần JavaScript!
+      </div></noscript
+    >
+    <div id="bg"></div>
 
-<div id="cv" class="overlay">Đang tải giao diện WLED...</div>
-<noscript><div class="overlay" style="opacity:1;">Xin lỗi, Giao diện WLED cần JavaScript!</div></noscript>
-<div id="bg"></div>
+    <div class="wrapper" id="top">
+      <div class="tab top">
+        <div class="btnwrap">
+          <button id="buttonPower" onclick="togglePower()" class="tgl">
+            <i class="icons">&#xe08f;</i>
+            <p class="tab-label">Bật</p>
+          </button>
+          <button id="buttonNl" onclick="toggleNl()">
+            <i class="icons">&#xe2a2;</i>
+            <p class="tab-label">Định giờ</p>
+          </button>
+          <button id="buttonSync" onclick="toggleSync()">
+            <i class="icons">&#xe116;</i>
+            <p class="tab-label">Đồng bộ</p>
+          </button>
+          <button id="buttonSr" onclick="toggleLiveview()">
+            <i class="icons">&#xe410;</i>
+            <p class="tab-label">Xem trước</p>
+          </button>
+          <button id="buttonI" onclick="toggleInfo()">
+            <i class="icons">&#xe066;</i>
+            <p class="tab-label">Thông tin</p>
+          </button>
+          <button id="buttonNodes" onclick="toggleNodes()">
+            <i class="icons">&#xe22d;</i>
+            <p class="tab-label">Danh sách đèn</p>
+          </button>
+        </div>
+        <button onclick="window.location.href = '/settings';">
+          <i class="icons">&#xe0a2;</i>
+          <p class="tab-label">Cấu hình</p>
+        </button>
+        <button id="buttonPcm" onclick="togglePcMode(true)">
+          <i class="icons">&#xe23d;</i>
+          <p class="tab-label">Chế độ PC</p>
+        </button>
+      </div>
+      <div id="briwrap">
+        <p class="hd">Độ sáng</p>
+        <div class="il">
+          <i class="icons slider-icon" onclick="tglTheme()">&#xe2a6;</i>
+          <div class="sliderwrap il">
+            <input
+              id="sliderBri"
+              onchange="setBri()"
+              oninput="updateTrail(this)"
+              max="255"
+              min="1"
+              type="range"
+              value="128"
+            />
+            <div class="sliderdisplay"></div>
+          </div>
+        </div>
+      </div>
+      <iframe id="liveview" src="about:blank"></iframe>
+    </div>
 
-<div class="wrapper" id="top">
-	<div class="tab top">
-		<div class="btnwrap">
-			<button id="buttonPower" onclick="togglePower()" class="tgl"><i class="icons">&#xe08f;</i><p class="tab-label">Bật</p></button>
-			<button id="buttonNl" onclick="toggleNl()"><i class="icons">&#xe2a2;</i><p class="tab-label">Định giờ</p></button>
-			<button id="buttonSync" onclick="toggleSync()"><i class="icons">&#xe116;</i><p class="tab-label">Đồng bộ</p></button>
-			<button id="buttonSr" onclick="toggleLiveview()"><i class="icons">&#xe410;</i><p class="tab-label">Xem trước</p></button>
-		  <button id="buttonI" onclick="toggleInfo()"><i class="icons">&#xe066;</i><p class="tab-label">Thông tin</p></button>
-      <button id="buttonNodes" onclick="toggleNodes()"><i class="icons">&#xe22d;</i><p class="tab-label">Danh sách đèn</p></button></div>
-			<button onclick="window.location.href = '/settings';"><i class="icons">&#xe0a2;</i><p class="tab-label">Cấu hình</p></button>
-		  <button id="buttonPcm" onclick="togglePcMode(true)"><i class="icons">&#xe23d;</i><p class="tab-label">Chế độ PC</p></button>
-		</div>
-		<div id="briwrap">
-			<p class="hd">Độ sáng</p>
-			<div class="il">
-				<i class="icons slider-icon" onclick="tglTheme()">&#xe2a6;</i>
-				<div class="sliderwrap il">
-					<input id="sliderBri" onchange="setBri()" oninput="updateTrail(this)" max="255" min="1" type="range" value="128" />
-					<div class="sliderdisplay"></div>
-				</div>
-			</div>
-		</div>
-		<iframe id="liveview" src="about:blank"></iframe>
-	</div>
-</div>
+    <div class="container">
+      <div id="Colors" class="tabcontent">
+        <div id="picker" class="noslide"></div>
+        <div id="rgbwrap">
+          <div class="sliderwrap il">
+            <input
+              id="sliderR"
+              class="noslide"
+              onchange="fromRgb()"
+              oninput="updateTrail(this,1)"
+              max="255"
+              min="0"
+              type="range"
+              value="128"
+            />
+            <div class="sliderdisplay"></div>
+          </div>
+          <br />
+          <div class="sliderwrap il">
+            <input
+              id="sliderG"
+              class="noslide"
+              onchange="fromRgb()"
+              oninput="updateTrail(this,2)"
+              max="255"
+              min="0"
+              type="range"
+              value="128"
+            />
+            <div class="sliderdisplay"></div>
+          </div>
+          <br />
+          <div class="sliderwrap il">
+            <input
+              id="sliderB"
+              class="noslide"
+              onchange="fromRgb()"
+              oninput="updateTrail(this,3)"
+              max="255"
+              min="0"
+              type="range"
+              value="128"
+            />
+            <div class="sliderdisplay"></div>
+          </div>
+          <br />
+        </div>
+        <div id="wwrap">
+          <p class="labels">Kênh màu trắng</p>
+          <div class="sliderwrap il">
+            <input
+              id="sliderW"
+              class="noslide"
+              onchange="setColor(0)"
+              oninput="updateTrail(this)"
+              max="255"
+              min="0"
+              type="range"
+              value="128"
+            />
+            <div class="sliderdisplay"></div>
+          </div>
+        </div>
+        <div id="qcs-w">
+          <div
+            class="qcs"
+            onclick="pC('#ff0000');"
+            title="Đỏ"
+            style="background-color: #ff0000"
+          ></div>
+          <div
+            class="qcs"
+            onclick="pC('#ffa000');"
+            title="Cam"
+            style="background-color: #ffa000"
+          ></div>
+          <div
+            class="qcs"
+            onclick="pC('#ffc800');"
+            title="Vàng"
+            style="background-color: #ffc800"
+          ></div>
+          <div
+            class="qcs"
+            onclick="pC('#ffe0a0');"
+            title="Trắng ấm"
+            style="background-color: #ffe0a0"
+          ></div>
+          <div
+            class="qcs"
+            onclick="pC('#ffffff');"
+            title="Trắng"
+            style="background-color: #ffffff"
+          ></div>
+          <div
+            class="qcs qcsb"
+            onclick="pC('#000000');"
+            title="Đen"
+            style="background-color: #000000"
+          ></div>
+          <br />
+          <div
+            class="qcs"
+            onclick="pC('#ff00ff');"
+            title="Hồng"
+            style="background-color: #ff00ff"
+          ></div>
+          <div
+            class="qcs"
+            onclick="pC('#0000ff');"
+            title="Xanh dương"
+            style="background-color: #0000ff"
+          ></div>
+          <div
+            class="qcs"
+            onclick="pC('#00ffc8');"
+            title="Xanh ngọc"
+            style="background-color: #00ffc8"
+          ></div>
+          <div
+            class="qcs"
+            onclick="pC('#08ff00');"
+            title="Xanh lá"
+            style="background-color: #08ff00"
+          ></div>
+          <div
+            class="qcs"
+            onclick="pC('rnd');"
+            title="Ngẫu nhiên"
+            style="
+              background-color: var(--c-3);
+              padding: 4px 8px;
+              transform: translateY(-10px);
+            "
+          >
+            R
+          </div>
+        </div>
+        <div id="csl">
+          <button class="xxs cl btn" onclick="selectSlot(0);">1</button>
+          <button class="xxs cl btn" onclick="selectSlot(1);">2</button>
+          <button class="xxs cl btn" onclick="selectSlot(2);">3</button>
+        </div>
+        <div id="hexw">
+          <input
+            id="hexc"
+            type="text"
+            class="noslide"
+            onkeydown="hexEnter(this)"
+            autocomplete="off"
+            maxlength="8"
+          />
+          <button id="hexcnf" class="xxs btn" onclick="fromHex();">
+            <i class="icons btna-icon">&#xe390;</i>
+          </button>
+        </div>
+        <p class="labels">
+          <i class="icons sel-icon" onclick="tglHex()">&#xe2b3;</i>
+          Bảng màu
+        </p>
+        <div class="il">
+          <div id="pallist" class="list">
+            <div class="lstI" data-id="0">
+              <label class="check schkl">
+                &nbsp;
+                <input
+                  type="radio"
+                  value="${palettes[i].id}"
+                  name="palette"
+                  onChange="setPalette()"
+                />
+                <span class="checkmark schk"></span>
+              </label>
+              <div class="lstIcontent">
+                <span class="lstIname"> Mặc định </span>
+              </div>
+            </div>
+            <div class="lstI">
+              <div class="lstIcontent">
+                <span class="lstIname"> Đang tải... </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
 
-<div class ="container">
-	<div id="Colors" class="tabcontent">
-		<div id="picker" class="noslide"></div>
-		<div id="rgbwrap">
-			<div class="sliderwrap il">
-				<input id="sliderR" class="noslide" onchange="fromRgb()" oninput="updateTrail(this,1)" max="255" min="0" type="range" value="128" />
-				<div class="sliderdisplay"></div>
-			</div><br>
-			<div class="sliderwrap il">
-				<input id="sliderG" class="noslide" onchange="fromRgb()" oninput="updateTrail(this,2)" max="255" min="0" type="range" value="128" />
-				<div class="sliderdisplay"></div>
-			</div><br>
-			<div class="sliderwrap il">
-				<input id="sliderB" class="noslide" onchange="fromRgb()" oninput="updateTrail(this,3)" max="255" min="0" type="range" value="128" />
-				<div class="sliderdisplay"></div>
-			</div><br>
-		</div>
-		<div id="wwrap">
-			<p class="labels">Kênh màu trắng</p>
-			<div class="sliderwrap il">
-				<input id="sliderW" class="noslide" onchange="setColor(0)" oninput="updateTrail(this)" max="255" min="0" type="range" value="128" />
-				<div class="sliderdisplay"></div>
-			</div>
-		</div>
-		<div id="qcs-w">
-			<div class="qcs" onclick="pC('#ff0000');" title="Đỏ" style="background-color:#ff0000;"></div>
-			<div class="qcs" onclick="pC('#ffa000');" title="Cam" style="background-color:#ffa000;"></div>
-			<div class="qcs" onclick="pC('#ffc800');" title="Vàng" style="background-color:#ffc800;"></div>
-			<div class="qcs" onclick="pC('#ffe0a0');" title="Trắng ấm" style="background-color:#ffe0a0;"></div>
-			<div class="qcs" onclick="pC('#ffffff');" title="Trắng" style="background-color:#ffffff;"></div>
-			<div class="qcs qcsb" onclick="pC('#000000');" title="Đen" style="background-color:#000000;"></div><br>
-			<div class="qcs" onclick="pC('#ff00ff');" title="Hồng" style="background-color:#ff00ff;"></div>
-			<div class="qcs" onclick="pC('#0000ff');" title="Xanh dương" style="background-color:#0000ff;"></div>
-			<div class="qcs" onclick="pC('#00ffc8');" title="Xanh ngọc" style="background-color:#00ffc8;"></div>
-			<div class="qcs" onclick="pC('#08ff00');" title="Xanh lá" style="background-color:#08ff00;"></div>
-			<div class="qcs" onclick="pC('rnd');" title="Ngẫu nhiên" style="background-color:var(--c-3); padding: 4px 8px; transform: translateY(-10px);">R</div>
-		</div>
-		<div id="csl">
-			<button class="xxs cl btn" onclick="selectSlot(0);">1</button>
-			<button class="xxs cl btn" onclick="selectSlot(1);">2</button>
-			<button class="xxs cl btn" onclick="selectSlot(2);">3</button>
-		</div>
-		<div id="hexw">
-			<input id="hexc" type="text" class="noslide" onkeydown="hexEnter(this)" autocomplete="off" maxlength="8" />
-			<button id="hexcnf" class="xxs btn" onclick="fromHex();"><i class="icons btna-icon">&#xe390;</i></button>
-		</div>
-		<p class="labels">
-			<i class="icons sel-icon" onclick="tglHex()">&#xe2b3;</i>
-			Bảng màu
-		</p>
-		<div class="il">
-			<div id="pallist" class="list">
-				<div class="lstI" data-id="0">
-					<label class="check schkl">
-						&nbsp;
-						<input type="radio" value="${palettes[i].id}" name="palette" onChange="setPalette()">
-						<span class="checkmark schk"></span>
-					</label>
-					<div class="lstIcontent">
-						<span class="lstIname">
-							Mặc định
-						</span>
-					</div>
-				</div>
-				<div class="lstI">
-					<div class="lstIcontent">
-						<span class="lstIname">
-							Đang tải...
-						</span>
-					</div>
-				</div>
+      <div id="Effects" class="tabcontent">
+        <p class="labels">Tốc độ hiệu ứng</p>
+        <div class="staytop">
+          <i class="icons slider-icon">&#xe325;</i>
+          <div class="sliderwrap il">
+            <input
+              id="sliderSpeed"
+              class="noslide"
+              onchange="setSpeed()"
+              oninput="updateTrail(this)"
+              max="255"
+              min="0"
+              type="range"
+              value="128"
+            />
+            <output class="sliderbubble hidden"></output>
+            <div class="sliderdisplay"></div>
+          </div>
+        </div>
+        <p class="labels">Cường độ hiệu ứng</p>
+        <div class="staytop" id="staytop1">
+          <i class="icons slider-icon" onclick="tglLabels()">&#xe409;</i>
+          <div class="sliderwrap il">
+            <input
+              id="sliderIntensity"
+              class="noslide"
+              onchange="setIntensity()"
+              oninput="updateTrail(this)"
+              max="255"
+              min="0"
+              type="range"
+              value="128"
+            />
+            <output class="sliderbubble hidden"></output>
+            <div class="sliderdisplay"></div>
+          </div>
+        </div>
+        <p class="labels">Chọn hiệu ứng</p>
+        <div id="fxlist" class="list">Đang tải...</div>
+      </div>
 
-			</div>
-		</div>
-	</div>
+      <div id="Segments" class="tabcontent">
+        <div id="segcont">Đang tải...</div>
+        <div id="segutil"></div>
+        <div id="segutil2">
+          <button class="btn btn-s" id="rsbtn" onclick="rSegs()">
+            Đặt lại các phân đoạn
+          </button>
+        </div>
+        <p>
+          Chuyển tiếp:
+          <input
+            id="tt"
+            class="noslide"
+            type="number"
+            min="0"
+            max="65.5"
+            step="0.1"
+            value="0.7"
+          />s
+        </p>
+      </div>
 
-	<div id="Effects" class="tabcontent">
-		<p class="labels">Tốc độ hiệu ứng</p>
-		<div class="staytop">
-			<i class="icons slider-icon">&#xe325;</i>
-			<div class="sliderwrap il">
-				<input id="sliderSpeed" class="noslide" onchange="setSpeed()" oninput="updateTrail(this)" max="255" min="0" type="range" value="128" />
-				<output class="sliderbubble hidden"></output>
-				<div class="sliderdisplay"></div>
-			</div>
-		</div>
-		<p class="labels">Cường độ hiệu ứng</p>
-		<div class="staytop" id="staytop1">
-			<i class="icons slider-icon" onclick="tglLabels()">&#xe409;</i>
-			<div class="sliderwrap il">
-				<input id="sliderIntensity" class="noslide" onchange="setIntensity()" oninput="updateTrail(this)" max="255" min="0" type="range" value="128" />
-				<output class="sliderbubble hidden"></output>
-				<div class="sliderdisplay"></div>
-			</div>
-		</div>
-		<p class="labels">Chọn hiệu ứng</p>
-		<div id="fxlist" class="list">
-			Đang tải...
-		</div>
-	</div>
+      <div id="Presets" class="tabcontent">
+        <div id="putil"></div>
+        <div id="pql"></div>
+        <div id="pcont">Đang tải...</div>
+      </div>
+    </div>
 
-	<div id="Segments" class="tabcontent">
-		<div id="segcont">
-			Đang tải...
-		</div>
-		<div id="segutil">
+    <div class="tab bot" id="bot">
+      <button class="tablinks" onclick="openTab(0)">
+        <i class="icons">&#xe2b3;</i>
+        <p class="tab-label">Màu sắc</p>
+      </button>
+      <button class="tablinks" onclick="openTab(1)">
+        <i class="icons">&#xe23d;</i>
+        <p class="tab-label">Hiệu ứng</p>
+      </button>
+      <button class="tablinks" onclick="openTab(2)">
+        <i class="icons">&#xe34b;</i>
+        <p class="tab-label">Phân đoạn</p>
+      </button>
+      <button class="tablinks" onclick="openTab(3)">
+        <i class="icons">&#xe04c;</i>
+        <p class="tab-label">Yêu thích</p>
+      </button>
+    </div>
 
-		</div>
-		<div id="segutil2">
-			<button class="btn btn-s" id="rsbtn" onclick="rSegs()">Đặt lại các phân đoạn</button>
-		</div>
-    <p>Chuyển tiếp: <input id="tt" class="noslide" type="number" min="0" max="65.5" step="0.1" value="0.7">s</p>
-	</div>
+    <div id="connind"></div>
+    <div id="toast"></div>
+    <div id="namelabel" onclick="toggleNodes()"></div>
+    <div id="info" class="modal">
+      <div id="imgw">
+        <img
+          class="wi"
+          alt=""
+          src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB0AAAAFCAYAAAC5Fuf5AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAABbSURBVChTlY9bDoAwDMNW7n9nwCipytQN4Z8tbrTHmDmF4oPzyldwRqp1SSdnV/NuZuzqerAByxXznBw3igkeFEfXyUuhK/yFM0CxJfyqXZEOc6/Sr9/bf7uIC5Nwd7orMvAPAAAAAElFTkSuQmCC"
+        />
+      </div>
+      <br />
+      <div id="kv">Đang tải...</div>
+      <br />
+      <button class="btn infobtn" onclick="requestJson(null)">Tải lại</button>
+      <button class="btn infobtn" onclick="toggleInfo()">Đóng</button><br />
+      <button class="btn infobtn" onclick="toggleNodes()">Danh sách đèn</button>
+      <button class="btn infobtn" id="resetbtn" onclick="cnfReset()">
+        Khởi động lại</button
+      ><br />
+      <span class="h"
+        >Made with <span id="heart">&#10084;&#xFE0E;</span> by Aircoookie and
+        the WLED community</span
+      >
+    </div>
 
-	<div id="Presets" class="tabcontent">
-		<div id="putil">
+    <div id="nodes" class="modal">
+      <div id="ndlt">Danh sách đèn</div>
+      <div id="kn">Đang tải...</div>
+      <br />
+      <button class="btn infobtn" onclick="loadNodes()">Tải lại</button>
+      <button class="btn infobtn" onclick="toggleNodes()">Đóng</button><br />
+    </div>
 
-		</div>
-		<div id="pql">
+    <div id="rover" class="modal">
+      <i class="icons huge">&#xe410;</i><br />
+      <div id="lv">?</div>
+      <br /><br />
+      Để điều khiển đèn và ngừng đồng bộ, bấm vào nút ghi đè bên dưới.<br />
+      Bạn có thể tiếp tục đồng bộ bằng cách bấm vào nút ngôi sao ở góc trên bên
+      trái màn hình.<br />
+      <button class="btn" onclick="setLor(1)">Ghi đè một lần</button>
+      <button class="btn" onclick="setLor(2)">
+        Ghi đè cho tới khi khởi động lại</button
+      ><br />
+      <span class="h"
+        >Để đạt được hiệu quả tất nhất, bạn được khuyến nghị tắt nguồn đồng bộ
+        khi không sử dụng.</span
+      >
+    </div>
 
-		</div>
-		<div id="pcont">
-			Đang tải...
-		</div>
-	</div>
-</div>
-
-<div class="tab bot" id="bot">
-	<button class="tablinks" onclick="openTab(0)"><i class="icons">&#xe2b3;</i><p class="tab-label">Màu sắc</p></button>
-	<button class="tablinks" onclick="openTab(1)"><i class="icons">&#xe23d;</i><p class="tab-label">Hiệu ứng</p></button>
-	<button class="tablinks" onclick="openTab(2)"><i class="icons">&#xe34b;</i><p class="tab-label">Phân đoạn</p></button>
-	<button class="tablinks" onclick="openTab(3)"><i class="icons">&#xe04c;</i><p class="tab-label">Yêu thích</p></button>
-</div>
-
-<div id="connind"></div>
-<div id="toast"></div>
-<div id="namelabel" onclick="toggleNodes()"></div>
-<div id="info" class="modal">
-	<div id="imgw">
-		<img class="wi" alt="" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB0AAAAFCAYAAAC5Fuf5AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAABbSURBVChTlY9bDoAwDMNW7n9nwCipytQN4Z8tbrTHmDmF4oPzyldwRqp1SSdnV/NuZuzqerAByxXznBw3igkeFEfXyUuhK/yFM0CxJfyqXZEOc6/Sr9/bf7uIC5Nwd7orMvAPAAAAAElFTkSuQmCC" />
-	</div><br>
-<div id="kv">Đang tải...</div><br>
-<button class="btn infobtn" onclick="requestJson(null)">Tải lại</button>
-<button class="btn infobtn" onclick="toggleInfo()">Đóng</button><br>
-<button class="btn infobtn" onclick="toggleNodes()">Danh sách đèn</button>
-<button class="btn infobtn" id="resetbtn" onclick="cnfReset()">Khởi động lại</button><br>
-<span class="h">Made with <span id="heart">&#10084;&#xFE0E;</span> by Aircoookie and the WLED community</span>
-</div>
-
-<div id="nodes" class="modal">
-  <div id="ndlt">Danh sách đèn</div>
-  <div id="kn">Đang tải...</div><br>
-  <button class="btn infobtn" onclick="loadNodes()">Tải lại</button>
-  <button class="btn infobtn" onclick="toggleNodes()">Đóng</button><br>
-</div>
-
-<div id="rover" class="modal">
-	<i class="icons huge">&#xe410;</i><br>
-	<div id="lv">?</div><br><br>
-	Để điều khiển đèn và ngừng đồng bộ, bấm vào nút ghi đè bên dưới.<br>
-	Bạn có thể tiếp tục đồng bộ bằng cách bấm vào nút ngôi sao ở góc trên bên trái màn hình.<br>
-	<button class="btn" onclick="setLor(1)">Ghi đè một lần</button>
-	<button class="btn" onclick="setLor(2)">Ghi đè cho tới khi khởi động lại</button><br>
-	<span class="h">Để đạt được hiệu quả tất nhất, bạn được khuyến nghị tắt nguồn đồng bộ khi không sử dụng.</span>
-</div>
-
-<i id="roverstar" class="icons huge" onclick="setLor(0)">&#xe410;</i><br>
-<script src="iro.js"></script>
-<script src="rangetouch.js"></script>
-<script src="index.js"></script>
-</body>
+    <i id="roverstar" class="icons huge" onclick="setLor(0)">&#xe410;</i><br />
+    <script src="iro.js"></script>
+    <script src="rangetouch.js"></script>
+    <script src="index.js"></script>
+  </body>
 </html>

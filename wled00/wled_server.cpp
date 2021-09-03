@@ -477,7 +477,7 @@ void serveSettings(AsyncWebServerRequest *request, bool post)
     {
     case 1:
       strcpy_P(s, PSTR("WiFi"));
-      strcpy_P(s2, PSTR("Vui lòng đóng trang này và kết nối đến địa chỉ IP mới của đèn WLED.)"));
+      strcpy_P(s2, PSTR("Vui lòng đóng trang này và kết nối đến địa chỉ IP mới của đèn WLED."));
       forceReconnect = true;
       break;
     case 2:
